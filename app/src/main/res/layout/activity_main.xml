@@ -11,7 +11,6 @@
         android:id="@+id/fragContainer"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="80dp"
         app:layout_constraintBottom_toTopOf="@+id/btNav"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -23,9 +22,9 @@
         android:id="@+id/btNav"
         android:layout_width="409dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="60dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:menu="@menu/botton_nav_menu" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
