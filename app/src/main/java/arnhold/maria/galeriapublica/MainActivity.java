@@ -105,10 +105,12 @@ public class MainActivity extends AppCompatActivity {
                 requestPermissions(permissionsNotGranted.toArray(new String[permissionsNotGranted.size()]),RESULT_REQUEST_PERMISSION);
             }
         }
-
+        //se o app ja tiver todas as informacoes que precisa,acessamos o mainviewmodel (leitura das fotos)
         else {
+            //obtendo a opcao escolhida pelo usuario
             MainViewModel vm = new ViewModelProvider(this).get(MainViewModel.class);
             int navigationOpSelected = vm.getNavigationOpSelected();
+            //setando essa opçao.
             bottomNavigationView.setSelectedItemId(navigationOpSelected);
         }
 
