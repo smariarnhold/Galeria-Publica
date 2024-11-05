@@ -44,36 +44,35 @@ public class MainActivity extends AppCompatActivity {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
-
-            //obtendo a referencia do MainViewMode
-            final MainViewModel vm = new ViewModelProvider(this).get(MainViewModel.class);
-
-            //obtendo a referencia do BottonNavigationView
-            bottomNavigationView = findViewById(R.id.btNav);
-            //escutador de cliques no btn
-            bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
-                //apos clicar, essa funcao sera chamada e indicar a opcao que o usuario escolheu
-                @Override
-                public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                    //guardamos a opcao indicada
-                    vm.setNavigationOpSelected(item.getItemId());
-                    //aqui é um if/else que muda de acordo com a opcao
-                    switch (item.getItemId()) {
-                        case R.id.gridViewOp:
-                            GridViewFragment gridViewFragment = GridViewFragment.newInstance();
-                            setFragment(gridViewFragment);
-                            break;
-                        case R.id.listViewOp:
-                            ListViewFragment listViewFragment = ListViewFragment.newInstance();
-                            setFragment(listViewFragment);
-                            break;
-                    }
-                    return true;
-                }
-            });
-
         });
+
+        //obtendo a referencia do MainViewMode
+        final MainViewModel vm = new ViewModelProvider(this).get(MainViewModel.class);
+
+        //obtendo a referencia do BottonNavigationView
+        bottomNavigationView = findViewById(R.id.btNav);
+        //escutador de cliques no btn
+        bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
+            //apos clicar, essa funcao sera chamada e indicar a opcao que o usuario escolheu
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                //guardamos a opcao indicada
+                vm.setNavigationOpSelected(item.getItemId());
+                //aqui é um if/else que muda de acordo com a opcao
+                if (item.getItemId() == R.id.gridViewOp) {
+                    GridViewFragment gridViewFragment = GridViewFragment.newInstance();
+                    setFragment(gridViewFragment);
+                } else if (item.getItemId() == R.id.listViewOp) {
+                    ListViewFragment listViewFragment = ListViewFragment.newInstance();
+                    setFragment(listViewFragment);
+                }
+                return true;
+            }
+        });
+
+
     }
+
     // recebe de paramentro um fragment
     void setFragment(Fragment fragment) {
         // gerenciamento de fragmentos
@@ -97,15 +96,15 @@ public class MainActivity extends AppCompatActivity {
     private void checkForPermissions(List<String> permissions) {
         List<String> permissionsNotGranted = new ArrayList<>();  // aceitamos uma lista de permissões como entrada
 
-        for(String permission : permissions) { // vamos verificar cada permissao
-            if( !hasPermission(permission)) { // caso nao tenha sido confirmada
+        for (String permission : permissions) { // vamos verificar cada permissao
+            if (!hasPermission(permission)) { // caso nao tenha sido confirmada
                 permissionsNotGranted.add(permission); // sera guarda em uma lista que mantem apenas as desse tipo
             }
         }
 
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if(permissionsNotGranted.size() > 0) {
-                requestPermissions(permissionsNotGranted.toArray(new String[permissionsNotGranted.size()]),RESULT_REQUEST_PERMISSION);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (permissionsNotGranted.size() > 0) {
+                requestPermissions(permissionsNotGranted.toArray(new String[permissionsNotGranted.size()]), RESULT_REQUEST_PERMISSION);
             }
         }
         //se o app ja tiver todas as informacoes que precisa,acessamos o mainviewmodel (leitura das fotos)
@@ -118,32 +117,34 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
+
     // metodo que verifica se uma determinada permissão já foi concedida ou nao
     private boolean hasPermission(String permission) {
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             return ActivityCompat.checkSelfPermission(MainActivity.this, permission) == PackageManager.PERMISSION_GRANTED;
         }
         return false;
     }
+
     // esse metodo so sera invocado após o usuário conceder ou não as permissões requisitadas
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
         final List<String> permissionsRejected = new ArrayList<>();
-        if(requestCode == RESULT_REQUEST_PERMISSION) {
+        if (requestCode == RESULT_REQUEST_PERMISSION) {
             // verifica se cada permissao foi concedida pelo usuario ou nao
-            for(String permission : permissions) {
-                if(!hasPermission(permission)) {
+            for (String permission : permissions) {
+                if (!hasPermission(permission)) {
                     permissionsRejected.add(permission);
                 }
             }
         }
         // se ha alguma que não foi concedida e eh necessaria, o sistema dispara uma mensagem
-        if(permissionsRejected.size() > 0) {
-            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        if (permissionsRejected.size() > 0) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 
-                if(shouldShowRequestPermissionRationale(permissionsRejected.get(0))) // vamos mostrar a mensagem
+                if (shouldShowRequestPermissionRationale(permissionsRejected.get(0))) // vamos mostrar a mensagem
                 {
                     new AlertDialog.Builder(MainActivity.this).
                             setMessage("Para usar essa app é preciso conceder essas permissões"). // mensagem disparada
@@ -159,8 +160,7 @@ public class MainActivity extends AppCompatActivity {
                     }).create().show();
                 }
             }
-        }
-        else {
+        } else {
             MainViewModel vm = new ViewModelProvider(this).get(MainViewModel.class);
             int navigationOpSelected = vm.getNavigationOpSelected();
             bottomNavigationView.setSelectedItemId(navigationOpSelected);
